@@ -27,6 +27,15 @@ public class TilesManager : MonoBehaviour
         // Game manager
         _gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
         
+        GetNewPuzzle();
+    }
+    
+    /********************************************************************
+     * Initialization
+     ********************************************************************/
+
+    public void GetNewPuzzle()
+    {
         // Get the texture used in the game
         GetRandomTexture();
         
@@ -48,10 +57,6 @@ public class TilesManager : MonoBehaviour
         RemoveRandomTile(true);
         ShuffleTiles();
     }
-    
-    /********************************************************************
-     * Initialization
-     ********************************************************************/
 
     private void GetRandomTexture()
     {
@@ -62,6 +67,12 @@ public class TilesManager : MonoBehaviour
     private void InitTileArray()
     {
         _tiles = new List<GameObject>();
+        
+        // Destroy tiles of the world
+        foreach (Transform tile in tilesContainer.transform)
+        {
+            Destroy(tile.gameObject);
+        }
     }
 
     private void GetContainerSize()
