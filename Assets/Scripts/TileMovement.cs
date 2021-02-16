@@ -43,14 +43,10 @@ public class TileMovement : MonoBehaviour
         
         _eventTrigger.enabled = false;
         _shadow.enabled = false;
+        ResetScaleTile();
 
         // Needed to put every tile in the right place
         if (_isDragged)
-        {
-            ResetTileLocalPos();
-            
-        }
-        else
         {
             ResetTilePos();
         }
@@ -115,13 +111,13 @@ public class TileMovement : MonoBehaviour
 
     public void OnPointerEnter(BaseEventData eventData)
     {
-        transform.localScale = new Vector3(1.05f, 1.05f);
+        ScaleTile(new Vector3(1.05f, 1.05f));
         _shadow.enabled = true;
     }
     
     public void OnPointerExit(BaseEventData eventData)
     {
-        transform.localScale = new Vector3(1f, 1f);
+        ResetScaleTile();
         _shadow.enabled = false;
     }
     
@@ -137,5 +133,15 @@ public class TileMovement : MonoBehaviour
     public void ResetTileLocalPos()
     {
         transform.localPosition = _lastPosition;
+    }
+
+    public void ScaleTile(Vector3 scale)
+    {
+        transform.localScale = scale;
+    }
+    
+    public void ResetScaleTile()
+    {
+        ScaleTile(new Vector3(1f, 1f));
     }
 }
