@@ -11,9 +11,15 @@ public class GameManager : MonoBehaviour
     public int defaultScore = 10_000;
     public int scoreLoosePerSeconds = 55;
     public bool canHighScoreOnLose = false;
-
+    public bool enableCheat = false;
+    
+    private bool _isGameFinished = false;
+    private bool _hasPlayerWon = false;
+    
     [Header("Game loop")]
     public float endingDuration = 3f;
+    
+    private WaitForSeconds _endingWait;
     
     [Header("Info display")]
     public TMPro.TMP_Text scoreText;
@@ -23,18 +29,23 @@ public class GameManager : MonoBehaviour
     public GameObject loseScreen;
     public TMPro.TMP_Text loseScoreText;
     public GameObject newHighScoreText;
-
-    private WaitForSeconds _endingWait;
     
     private float _score;
     private NumberFormatInfo _scoreFormat = new NumberFormatInfo {CurrencyGroupSeparator = " ", CurrencySymbol = string.Empty, CurrencyDecimalDigits = 0};
     private float _remainingTime;
-    private bool _isGameFinished = false;
-    private bool _hasPlayerWon = false;
+
+    [Header("Sound settings")]
+    public bool playSounds = true;
+    public AudioClip winSound;
+    public AudioClip loseSound;
+
+    private AudioSource _audioSource;
 
     private void Start()
     {
         _endingWait = new WaitForSeconds(endingDuration);
+
+        _audioSource = GetComponent<AudioSource>();
         
         StartGame();
     }
@@ -80,11 +91,13 @@ public class GameManager : MonoBehaviour
         
         if (_hasPlayerWon)
         {
+            PlaySound(winSound);
             ShowWinScreen();
             ShowNewHighScoreText(isAHighScore);
         }
         else
         {
+            PlaySound(loseSound);
             ShowLoseScreen();
 
             if (canHighScoreOnLose)
@@ -96,8 +109,9 @@ public class GameManager : MonoBehaviour
     
     private IEnumerator GamePlaying()
     {
-        while (!IsTimeElapsed() && !_hasPlayerWon)
+        while (!IsTimeElapsed() && !_isGameFinished && !_hasPlayerWon)
         {
+            ProcessCheat();
             yield return null;
         }
     }
@@ -221,5 +235,47 @@ public class GameManager : MonoBehaviour
     public void ShowNewHighScoreText(bool show = true)
     {
         newHighScoreText.SetActive(show);
+    }
+    
+    /********************************************************************
+     * Game states sounds
+     ********************************************************************/
+    
+    private void PlaySound(AudioClip clip)
+    {
+        if (!CanPlaySound(clip)) return;
+        
+        if (_audioSource.isPlaying) _audioSource.Stop();
+        _audioSource.PlayOneShot(clip);
+    }
+
+    public bool CanPlaySound()
+    {
+        return playSounds;
+    }
+    
+    public bool CanPlaySound(AudioClip clip)
+    {
+        return playSounds && (clip != null);
+    }
+    
+    /********************************************************************
+     * Cheat
+     ********************************************************************/
+
+    private void ProcessCheat()
+    {
+        if (!enableCheat) return;
+        
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            _isGameFinished = true;
+            SetGameWon(false);
+        }
+        else if (Input.GetKeyDown(KeyCode.W))
+        {
+            _isGameFinished = true;
+            SetGameWon(true);
+        }
     }
 }
