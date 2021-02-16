@@ -1,3 +1,28 @@
+# Résultat
+Le jeu est fait pour être jouer en résolution 720 x 1280, une résolution de téléphone. D'autres résolutions peuvent fonctionner mais je ne suis pas sûr du résultat.
+
+## Fonctionnalités
+Le jeu suit les règles du Taquin. Une texture est découpée en neuf carrés et l'utilisateur doit les remettre dans l'ordre dans le temps imparti. **Un carré ne peut être déplacée que dans une place vide.**
+
+- Il est possible de modifier les règles du jeu depuis l'Inspecteur en cliquant sur le GameObject _"**GameManager**"_.
+- Il est aussi possible de modifier la configuration de la grille depuis l'Inspecteur en cliquant sur le GameObject  _"GameCanvas > **Game Container**"_. Un nombre impair supérieur ou égale à 3 est recommandé pour le nombre de cases par ligne.
+- Par défaut, un joueur ne peut avoir un high score que s'il gagne la partie.
+
+## Bugs connus
+- Si la grille est découpée en trop de carrés et que la texture est trop petite, le jeu plante.
+
+## Améliorations possibles
+- Adapter le jeu à toutes les résolutions.
+- Ajouter des sons.
+- Ajouter des puzzles et un système de difficulté.
+- Ajouter un menu "Options".
+- Ajouter un classement en ligne.
+- Le code peut être simplifié et optimisé.
+
+## Crédits
+- [tada2.wav by Jobro](https://freesound.org/people/jobro/sounds/60444/#)
+- [Retro You Lose SFX by SunTemple](https://freesound.org/people/suntemple/sounds/253174/#)
+---
 # Test de développement 
 
 Le but de ce test est de déterminer votre niveau de maitrise d'Unity, du C#, du GamePlay et de la gestion de projet mobile.
