@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public class TilesCreator : MonoBehaviour
+public class TilesManager : MonoBehaviour
 {
     [Header("Tiles")]
     [SerializeField] private GameObject tilesContainer = null;

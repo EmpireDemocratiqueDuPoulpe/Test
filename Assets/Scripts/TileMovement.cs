@@ -3,14 +3,14 @@ using UnityEngine.EventSystems;
 
 public class TileMovement : MonoBehaviour
 {
-    private TilesCreator _tilesCreator;
+    private TilesManager _tilesCreator;
     private RectTransform _rectTransform;
     private RectTransform _parentRectTransform;
     private Vector3 _lastPosition;
     
     private void Start()
     {
-        _tilesCreator = GetComponentInParent<TilesCreator>();
+        _tilesCreator = GetComponentInParent<TilesManager>();
         _rectTransform = GetComponent<RectTransform>();
         _parentRectTransform = transform.parent.GetComponent<RectTransform>();
         _lastPosition = transform.localPosition;
