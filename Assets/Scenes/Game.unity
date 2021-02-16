@@ -603,11 +603,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2023444063}
-    - target: {fileID: 4666984887480196651, guid: a5a2f66d2ca27e54ebde76a7fd34c938,
-        type: 3}
-      propertyPath: destroyRandomTile
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4666984887789787142, guid: a5a2f66d2ca27e54ebde76a7fd34c938,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

@@ -1126,10 +1126,9 @@ MonoBehaviour:
   tilesMarginSize: 15
   destroyRandomTile: 0
   textures:
-  - {fileID: 2800000, guid: 140ce408882f8474fad570e5d0aca21c, type: 3}
-  - {fileID: 2800000, guid: e558d224b6f1e2646b7a3b8e5c9f5e56, type: 3}
-  - {fileID: 2800000, guid: cbd36c317c1735d4881504ddc84ce437, type: 3}
-  - {fileID: 2800000, guid: 2e3a4f92920d1a84bacec3c35c975d65, type: 3}
+  - {fileID: 2800000, guid: 23455d0b73b93204ab6f610b7eefe2d7, type: 3}
+  - {fileID: 2800000, guid: 910c65662f4e33541a2ca65de1b72fd0, type: 3}
+  - {fileID: 2800000, guid: e760c69a6373f014483e951f514a2f4f, type: 3}
 --- !u!222 &4666984887480196650
 CanvasRenderer:
   m_ObjectHideFlags: 0
