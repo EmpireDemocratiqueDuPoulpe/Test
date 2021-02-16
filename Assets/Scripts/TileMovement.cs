@@ -1,26 +1,64 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class TileMovement : MonoBehaviour
 {
+    private GameManager _gameManager;
+
+    private EventTrigger _eventTrigger;
+    
     private TilesManager _tilesCreator;
     private RectTransform _rectTransform;
     private RectTransform _parentRectTransform;
+
+    private bool _isDragged;
     private Vector3 _lastPosition;
     private int _lastSiblingIndex;
     
     private void Start()
     {
+        // Game manager
+        _gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+        
+        // Event trigger
+        _eventTrigger = GetComponent<EventTrigger>();
+        
+        // Tiles container
         _tilesCreator = GetComponentInParent<TilesManager>();
         _rectTransform = GetComponent<RectTransform>();
         _parentRectTransform = transform.parent.GetComponent<RectTransform>();
         
+        // Tile position
         _lastPosition = transform.localPosition;
         _lastSiblingIndex = transform.GetSiblingIndex();
     }
+
+    private void Update()
+    {
+        if (!_gameManager.IsGameFinished) return;
+        
+        _eventTrigger.enabled = false;
+
+        // Needed to put every tile in the right place
+        if (_isDragged)
+        {
+            ResetTilePos();
+        }
+        else
+        {
+            ResetTileLocalPos();
+        }
+    }
+
+    /********************************************************************
+     * Drag event
+     ********************************************************************/
     
     public void OnStartDrag(BaseEventData eventData)
     {
+        _isDragged = true;
+        
         // Save the position before any movement
         _lastPosition = transform.position;
         _lastSiblingIndex = transform.GetSiblingIndex();
@@ -38,6 +76,8 @@ public class TileMovement : MonoBehaviour
     
     public void OnEndDrag(BaseEventData eventData)
     {
+        _isDragged = true;
+        
         var e = (PointerEventData) eventData;
 
         // Get the position relative to the tiles container
@@ -54,7 +94,25 @@ public class TileMovement : MonoBehaviour
         // Check if the tile can be moved, else return it back to the old position
         if (!_tilesCreator.MoveTileTo(gameObject, localPos, _lastPosition, _lastSiblingIndex))
         {
-            transform.position = _lastPosition;
+            ResetTilePos();
         }
+        else
+        {
+            _lastPosition = transform.position;
+        }
+    }
+    
+    /********************************************************************
+     * Tile position
+     ********************************************************************/
+
+    public void ResetTilePos()
+    {
+        transform.position = _lastPosition;
+    }
+    
+    public void ResetTileLocalPos()
+    {
+        transform.localPosition = _lastPosition;
     }
 }

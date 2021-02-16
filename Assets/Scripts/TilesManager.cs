@@ -12,6 +12,9 @@ public class TilesManager : MonoBehaviour
     [SerializeField] private int tilesMarginSize = 10;
     [SerializeField] private Texture2D[] textures = new Texture2D[0];
 
+    
+    private GameManager _gameManager;
+    
     private float _containerW;
     private float _containerH;
     private float _tileW;
@@ -21,6 +24,9 @@ public class TilesManager : MonoBehaviour
     
     private void Start()
     {
+        // Game manager
+        _gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+        
         // Get the texture used in the game
         GetRandomTexture();
         
@@ -230,8 +236,8 @@ public class TilesManager : MonoBehaviour
                 break;
             }
         }
-        
-        Debug.Log("Finished ?: " + isPuzzleFinished());
+
+        Invoke(nameof(CheckPuzzleState), 1f);
 
         return hasMoved;
     }
@@ -245,19 +251,22 @@ public class TilesManager : MonoBehaviour
      * Puzzle completion
      ********************************************************************/
 
+    public bool CheckPuzzleState()
+    {
+        if (!isPuzzleFinished()) return false;
+        
+        _gameManager.SetGameWon();
+        return true;
+    }
+    
     public bool isPuzzleFinished()
     {
         for (var i = 0; i < _tiles.Count; i++)
         {
             var tile = _tiles[i];
             var placementChecker = tile.GetComponent<TilePlacementChecker>();
-            var tilePos = placementChecker.GetCurrentTilePos();
-            var tileEndingPos = placementChecker.GetCorrectTilePos();
-            
-            Debug.Log(tile.name + ": ("+tilePos.x+" != "+tileEndingPos.x+" || "+tilePos.y+" != "+tileEndingPos.y+") = "+
-                      ((bool) (tilePos.x != tileEndingPos.x || tilePos.y != tileEndingPos.y)));
 
-            if ((tilePos.x != tileEndingPos.x) || (tilePos.y != tileEndingPos.y))
+            if (!placementChecker.IsAtTheRightPos())
             {
                 return false;
             }
