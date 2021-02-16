@@ -6,11 +6,12 @@ using Random = UnityEngine.Random;
 public class TilesManager : MonoBehaviour
 {
     [Header("Tiles")]
-    [SerializeField] private GameObject tilesContainer = null;
-    [SerializeField] private GameObject tilePrefab = null;
-    [SerializeField] private int tilesPerRow = 3;
-    [SerializeField] private int tilesMarginSize = 10;
-    [SerializeField] private Texture2D[] textures = new Texture2D[0];
+    public GameObject tilesContainer;
+    public GameObject tilePrefab = null;
+    public int tilesPerRow = 3;
+    public int tilesMarginSize = 10;
+    public bool destroyRandomTile = true;
+    public Texture2D[] textures = new Texture2D[0];
 
     
     private GameManager _gameManager;
@@ -53,9 +54,17 @@ public class TilesManager : MonoBehaviour
                 tileImage.sprite = CreateSpriteFrom(x, y);
             }
         }
-        
-        RemoveRandomTile(true);
+
         ShuffleTiles();
+        
+        if (destroyRandomTile)
+        {
+            RemoveRandomTile(true);
+        }
+        else
+        {
+            RemoveCenterTile(true);
+        }
     }
 
     private void GetRandomTexture()
@@ -184,17 +193,42 @@ public class TilesManager : MonoBehaviour
         _tiles[secondIndex] = firstTile;
         _tiles[firstIndex] = secondTile;
     }
-    
-    
 
     /********************************************************************
      * Tile deletion
      ********************************************************************/
 
+    private void RemoveCenterTile(bool fakeDeletion = false)
+    {
+        // Doesn't work
+        //var tileIndex = (Mathf.CeilToInt(tilesPerRow * (tilesPerRow / 2))) - 1;
+        //var tile = _tiles[tileIndex];
+        //
+        //RemoveTile(tile, fakeDeletion);
+
+        var center = Mathf.CeilToInt(tilesPerRow / 2);
+        
+        foreach (var tile in _tiles)
+        {
+            var checker = tile.GetComponent<TilePlacementChecker>();
+            var pos = checker.GetCurrentTilePos();
+
+            if (pos.x == center && pos.y == center)
+            {
+                RemoveTile(tile, fakeDeletion);
+                break;
+            }
+        }
+    }
+    
     private void RemoveRandomTile(bool fakeDeletion = false)
     {
-        var tile = GetRandomTile();
-
+        Debug.Log("RemoveRandomTile");
+        RemoveTile(GetRandomTile(), fakeDeletion);
+    }
+    
+    private void RemoveTile(GameObject tile, bool fakeDeletion = false)
+    {
         // Change the sprite to an invisible one. The tile still exist
         if (fakeDeletion)
         {
