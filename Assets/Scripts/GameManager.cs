@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     public TMPro.TMP_Text winScoreText;
     public GameObject loseScreen;
     public TMPro.TMP_Text loseScoreText;
+    public TMPro.TMP_Text newHighScoreText;
 
     private WaitForSeconds _endingWait;
     
@@ -58,6 +59,7 @@ public class GameManager : MonoBehaviour
     {
         ShowWinScreen(false);
         ShowLoseScreen(false);
+        ShowNewHighScoreText(false);
         SetScore(defaultScore);
         SetRemainingTime(gameDuration);
         
@@ -72,6 +74,8 @@ public class GameManager : MonoBehaviour
         
         // The game is finished
         if (!_isGameFinished) yield break;
+
+        var isAHighScore = CompareScoreToHighScore();
         
         if (_hasPlayerWon)
         {
@@ -81,6 +85,8 @@ public class GameManager : MonoBehaviour
         {
             ShowLoseScreen();
         }
+
+        ShowNewHighScoreText(isAHighScore);
     }
     
     private IEnumerator GamePlaying()
@@ -127,6 +133,34 @@ public class GameManager : MonoBehaviour
     public string GetFormattedScore()
     {
         return _score.ToString("C", _scoreFormat);
+    }
+
+    private bool CompareScoreToHighScore()
+    {
+        // Check if there's already a high score
+        if (PlayerPrefs.HasKey("high_score_points"))
+        {
+            var points = PlayerPrefs.GetInt("high_score_points");
+
+            if (points < _score)
+            {
+                AddScoreToHighScore();
+            }
+            else return false;
+        }
+        else
+        {
+            AddScoreToHighScore();
+        }
+
+        return true;
+    }
+    
+    private void AddScoreToHighScore()
+    {
+        PlayerPrefs.SetInt("high_score_points", (int) _score);
+        PlayerPrefs.SetFloat("high_score_duration", gameDuration - _remainingTime);
+        PlayerPrefs.Save();
     }
 
     /********************************************************************
@@ -177,5 +211,10 @@ public class GameManager : MonoBehaviour
         }
         
         loseScreen.SetActive(show);
+    }
+    
+    public void ShowNewHighScoreText(bool show = true)
+    {
+        newHighScoreText.enabled = false;
     }
 }
