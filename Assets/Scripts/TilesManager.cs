@@ -212,6 +212,12 @@ public class TilesManager : MonoBehaviour
             // Skip if it's the moving tile
             if (t.name.Equals(tile.name)) continue;
             
+            // Skip if the tile isn't empty
+            if (!IsMovingOnEmptyTile(t)) continue;
+            
+            // Skip if the tile isn't next to the moving one
+            if (!IsNextToTheTile(tile, t)) continue;
+
             // Get second tile position, size and origin
             var tRect = t.GetComponent<RectTransform>().rect;
             var tW = tRect.width;
@@ -240,6 +246,28 @@ public class TilesManager : MonoBehaviour
         Invoke(nameof(CheckPuzzleState), 1f);
 
         return hasMoved;
+    }
+    
+    private bool IsMovingOnEmptyTile(GameObject tile)
+    {
+        var image = tile.GetComponent<Image>();
+        return (image.sprite == null);
+    }
+    
+    private bool IsNextToTheTile(GameObject firstTile, GameObject secondTile)
+    {
+        // Get Placement checker and pos
+        var firstTileChecker = firstTile.GetComponent<TilePlacementChecker>();
+        var secondTileChecker = secondTile.GetComponent<TilePlacementChecker>();
+
+        var firstPos = firstTileChecker.GetCurrentTilePos();
+        var secondPos = secondTileChecker.GetCurrentTilePos();
+        
+        // Check where the second tile is (relative to the first)
+        var isOnLeftRight = (firstPos.x - 1 == secondPos.x) || (firstPos.x + 1 == secondPos.x);
+        var isOnTopBottom = (firstPos.y - 1 == secondPos.y) || (firstPos.y + 1 == secondPos.y);
+        
+        return (isOnLeftRight && !isOnTopBottom) || (isOnTopBottom && !isOnLeftRight);
     }
 
     private bool IsInsideOfTile(float aX, float aY, float bX, float bY, float bW, float bH)
