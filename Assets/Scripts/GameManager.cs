@@ -86,13 +86,13 @@ public class GameManager : MonoBehaviour
         
         // The game is finished
         if (!_isGameFinished) yield break;
-
-        var isAHighScore = CompareScoreToHighScore();
         
         if (_hasPlayerWon)
         {
             PlaySound(winSound);
             ShowWinScreen();
+            
+            var isAHighScore = CompareScoreToHighScore();
             ShowNewHighScoreText(isAHighScore);
         }
         else
@@ -102,6 +102,7 @@ public class GameManager : MonoBehaviour
 
             if (canHighScoreOnLose)
             {
+                var isAHighScore = CompareScoreToHighScore();
                 ShowNewHighScoreText(isAHighScore);
             }
         }

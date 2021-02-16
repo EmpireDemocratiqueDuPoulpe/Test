@@ -584,6 +584,7 @@ PlayerSettings:
   scriptingDefineSymbols:
     1: 
     4: 
+    7: 
   platformArchitecture: {}
   scriptingBackend: {}
   il2cppCompilerConfiguration: {}
