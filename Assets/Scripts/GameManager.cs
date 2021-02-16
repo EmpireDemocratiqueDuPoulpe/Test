@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -17,7 +18,7 @@ public class GameManager : MonoBehaviour
     private float _tileW;
     private float _tileH;
     private Texture2D _currentTexture;
-    private GameObject[] _tiles;
+    private List<GameObject> _tiles;
     
     private void Start()
     {
@@ -38,6 +39,8 @@ public class GameManager : MonoBehaviour
                 tileImage.sprite = CreateSpriteFrom(x, y);
             }
         }
+        
+        RemoveRandomTile();
     }
 
     private void GetRandomTexture()
@@ -48,7 +51,8 @@ public class GameManager : MonoBehaviour
 
     private void InitTileArray()
     {
-        _tiles = new GameObject[(int) Mathf.Pow(tilesPerRow, 2)];
+        //_tiles = new GameObject[(int) Mathf.Pow(tilesPerRow, 2)];
+        _tiles = new List<GameObject>();
     }
 
     private void GetContainerSize()
@@ -72,7 +76,8 @@ public class GameManager : MonoBehaviour
         var tileIndex = x * tilesPerRow + y;
         
         // Create the game object
-        _tiles[tileIndex] = new GameObject("tile" + x + ":" + y);
+        //_tiles[tileIndex] = new GameObject("tile" + x + ":" + y);
+        _tiles.Add(new GameObject("tile" + x + ":" + y));
         _tiles[tileIndex].transform.parent = tilesContainer.transform;
         
         // Set tile size and position
@@ -99,5 +104,12 @@ public class GameManager : MonoBehaviour
     {
         var rect = new Rect(_tileW * x, _tileH * y, _tileW, _tileH);
         return Sprite.Create(_currentTexture, rect, Vector2.one * 0.5f);
+    }
+
+    private void RemoveRandomTile()
+    {
+        var tileIndex = Random.Range(0, _tiles.Count);
+        Destroy(_tiles[tileIndex]);
+        _tiles.RemoveAt(tileIndex);
     }
 }
