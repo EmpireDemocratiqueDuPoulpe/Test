@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
         }
         
         RemoveRandomTile();
+        ShuffleTiles();
     }
 
     private void GetRandomTexture()
@@ -106,10 +107,50 @@ public class GameManager : MonoBehaviour
         return Sprite.Create(_currentTexture, rect, Vector2.one * 0.5f);
     }
 
+    private GameObject GetRandomTile()
+    {
+        return _tiles[Random.Range(0, _tiles.Count)];
+    }
+    
+    private int GetRandomTileIndex()
+    {
+        return Random.Range(0, _tiles.Count);
+    }
+
+    private void ShuffleTiles()
+    {
+        for (var i = 0; i < _tiles.Count; i++)
+        {
+            // Get tiles
+            var tile = _tiles[i];
+            var secondTileIndex = GetRandomTileIndex();
+            var secondTile = _tiles[secondTileIndex];
+
+            if (tile == secondTile) continue;
+            
+            // Invert name, position and index
+            //var oldName = tile.name;
+            //var newName = secondTile.name;
+
+            //tile.name = newName;
+            //secondTile.name = oldName;
+                
+            var oldPos = tile.transform.position;
+            var newPos = secondTile.transform.position;
+
+            tile.transform.position = newPos;
+            secondTile.transform.position = oldPos;
+
+            _tiles[secondTileIndex] = tile;
+            _tiles[i] = secondTile;
+        }
+    }
+
     private void RemoveRandomTile()
     {
-        var tileIndex = Random.Range(0, _tiles.Count);
-        Destroy(_tiles[tileIndex]);
-        _tiles.RemoveAt(tileIndex);
+        var tile = GetRandomTile();
+        
+        Destroy(tile);
+        _tiles.Remove(tile);
     }
 }
