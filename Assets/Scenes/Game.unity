@@ -121,18 +121,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &297763748 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4666984887798618868, guid: a5a2f66d2ca27e54ebde76a7fd34c938,
-    type: 3}
-  m_PrefabInstance: {fileID: 4666984887522548048}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &553616263
 GameObject:
   m_ObjectHideFlags: 0
@@ -542,6 +530,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4666984887522548048}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1926879128 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4666984887798618866, guid: a5a2f66d2ca27e54ebde76a7fd34c938,
+    type: 3}
+  m_PrefabInstance: {fileID: 4666984887522548048}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2023444062
 GameObject:
   m_ObjectHideFlags: 0
@@ -614,6 +608,16 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2023444063}
+    - target: {fileID: 4666984887798618866, guid: a5a2f66d2ca27e54ebde76a7fd34c938,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4666984887798618868, guid: a5a2f66d2ca27e54ebde76a7fd34c938,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4666984887809750869, guid: a5a2f66d2ca27e54ebde76a7fd34c938,
         type: 3}
       propertyPath: m_Name
@@ -777,7 +781,7 @@ PrefabInstance:
         type: 3}
       propertyPath: newHighScoreText
       value: 
-      objectReference: {fileID: 297763748}
+      objectReference: {fileID: 1926879128}
     - target: {fileID: 7483376256336932395, guid: 11840551396196d4f919f4140b413b6b,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public TMPro.TMP_Text winScoreText;
     public GameObject loseScreen;
     public TMPro.TMP_Text loseScoreText;
-    public TMPro.TMP_Text newHighScoreText;
+    public GameObject newHighScoreText;
 
     private WaitForSeconds _endingWait;
     
@@ -215,6 +215,6 @@ public class GameManager : MonoBehaviour
     
     public void ShowNewHighScoreText(bool show = true)
     {
-        newHighScoreText.enabled = false;
+        newHighScoreText.SetActive(show);
     }
 }
