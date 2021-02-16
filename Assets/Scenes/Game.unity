@@ -603,6 +603,26 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2023444063}
+    - target: {fileID: 4666984887480196651, guid: a5a2f66d2ca27e54ebde76a7fd34c938,
+        type: 3}
+      propertyPath: textures.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4666984887480196651, guid: a5a2f66d2ca27e54ebde76a7fd34c938,
+        type: 3}
+      propertyPath: textures.Array.data[2]
+      value: 
+      objectReference: {fileID: 2800000, guid: cbd36c317c1735d4881504ddc84ce437, type: 3}
+    - target: {fileID: 4666984887480196651, guid: a5a2f66d2ca27e54ebde76a7fd34c938,
+        type: 3}
+      propertyPath: tilesPerRow
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4666984887480196651, guid: a5a2f66d2ca27e54ebde76a7fd34c938,
+        type: 3}
+      propertyPath: textures.Array.data[3]
+      value: 
+      objectReference: {fileID: 2800000, guid: 2e3a4f92920d1a84bacec3c35c975d65, type: 3}
     - target: {fileID: 4666984887789787142, guid: a5a2f66d2ca27e54ebde76a7fd34c938,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

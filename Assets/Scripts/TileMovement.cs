@@ -47,11 +47,12 @@ public class TileMovement : MonoBehaviour
         // Needed to put every tile in the right place
         if (_isDragged)
         {
-            ResetTilePos();
+            ResetTileLocalPos();
+            
         }
         else
         {
-            ResetTileLocalPos();
+            ResetTilePos();
         }
     }
 
