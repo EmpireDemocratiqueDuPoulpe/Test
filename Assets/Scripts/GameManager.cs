@@ -178,18 +178,4 @@ public class GameManager : MonoBehaviour
         
         loseScreen.SetActive(show);
     }
-    
-    /********************************************************************
-     * Scenes
-     ********************************************************************/
-
-    public void GoToMainMenu()
-    {
-        SceneManager.LoadScene("Home");
-    }
-    
-    public void ReloadScene()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
 }

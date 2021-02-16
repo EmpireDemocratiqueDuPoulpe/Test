@@ -1,12 +1,14 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class TileMovement : MonoBehaviour
 {
     private GameManager _gameManager;
 
     private EventTrigger _eventTrigger;
+    private Shadow _shadow;
     
     private TilesManager _tilesCreator;
     private RectTransform _rectTransform;
@@ -21,8 +23,9 @@ public class TileMovement : MonoBehaviour
         // Game manager
         _gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
         
-        // Event trigger
+        // Event trigger and shadow
         _eventTrigger = GetComponent<EventTrigger>();
+        _shadow = GetComponent<Shadow>();
         
         // Tiles container
         _tilesCreator = GetComponentInParent<TilesManager>();
@@ -39,6 +42,7 @@ public class TileMovement : MonoBehaviour
         if (!_gameManager.IsGameFinished) return;
         
         _eventTrigger.enabled = false;
+        _shadow.enabled = false;
 
         // Needed to put every tile in the right place
         if (_isDragged)
@@ -58,6 +62,7 @@ public class TileMovement : MonoBehaviour
     public void OnStartDrag(BaseEventData eventData)
     {
         _isDragged = true;
+        _shadow.enabled = true;
         
         // Save the position before any movement
         _lastPosition = transform.position;
@@ -67,7 +72,7 @@ public class TileMovement : MonoBehaviour
     public void OnDrag(BaseEventData eventData)
     {
         var e = (PointerEventData) eventData;
-        
+
         // Move the tile onto the mouse and set it as last child (prevent from being draw behind other tiles)
         transform.position = e.position;
         transform.SetSiblingIndex(transform.parent.childCount);
@@ -76,10 +81,11 @@ public class TileMovement : MonoBehaviour
     
     public void OnEndDrag(BaseEventData eventData)
     {
-        _isDragged = true;
+        _isDragged = false;
+        _shadow.enabled = false;
         
         var e = (PointerEventData) eventData;
-
+        
         // Get the position relative to the tiles container
         if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
             _parentRectTransform,
@@ -100,6 +106,22 @@ public class TileMovement : MonoBehaviour
         {
             _lastPosition = transform.position;
         }
+    }
+    
+    /********************************************************************
+     * Pointer event
+     ********************************************************************/
+
+    public void OnPointerEnter(BaseEventData eventData)
+    {
+        transform.localScale = new Vector3(1.05f, 1.05f);
+        _shadow.enabled = true;
+    }
+    
+    public void OnPointerExit(BaseEventData eventData)
+    {
+        transform.localScale = new Vector3(1f, 1f);
+        _shadow.enabled = false;
     }
     
     /********************************************************************

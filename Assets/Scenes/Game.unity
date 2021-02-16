@@ -564,8 +564,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1649595913}
-        m_MethodName: GoToMainMenu
+      - m_Target: {fileID: 2023444063}
+        m_MethodName: GoToGameScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1523,8 +1523,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1649595913}
-        m_MethodName: GoToMainMenu
+      - m_Target: {fileID: 2023444063}
+        m_MethodName: GoToGameScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1797,7 +1797,7 @@ PrefabInstance:
     - target: {fileID: 762328620583590272, guid: 581b890a36b094c23a41811efdb882eb,
         type: 3}
       propertyPath: EffectOnEnter.EffectName
-      value: Block Grow
+      value: Fade/Fade basic
       objectReference: {fileID: 0}
     - target: {fileID: 762328620583590272, guid: 581b890a36b094c23a41811efdb882eb,
         type: 3}
@@ -1822,7 +1822,7 @@ PrefabInstance:
     - target: {fileID: 762328620583590272, guid: 581b890a36b094c23a41811efdb882eb,
         type: 3}
       propertyPath: EffectOnExit.EffectName
-      value: Slush Block
+      value: Block Grow
       objectReference: {fileID: 0}
     - target: {fileID: 762328620583590272, guid: 581b890a36b094c23a41811efdb882eb,
         type: 3}
@@ -2194,7 +2194,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1649595913}
+      - m_Target: {fileID: 2023444063}
         m_MethodName: ReloadScene
         m_Mode: 1
         m_Arguments:
@@ -2324,7 +2324,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1649595913}
+      - m_Target: {fileID: 2023444063}
         m_MethodName: ReloadScene
         m_Mode: 1
         m_Arguments:
@@ -2853,7 +2853,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fe2671f90b2e4e15871cb594e81a0d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SceneForButton: 1
+  SceneForButton: 0
 --- !u!4 &2023444064
 Transform:
   m_ObjectHideFlags: 0
