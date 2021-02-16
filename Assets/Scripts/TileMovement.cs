@@ -7,6 +7,7 @@ public class TileMovement : MonoBehaviour
 {
     private GameManager _gameManager;
 
+    private Image _image;
     private EventTrigger _eventTrigger;
     private Shadow _shadow;
     
@@ -14,6 +15,7 @@ public class TileMovement : MonoBehaviour
     private RectTransform _rectTransform;
     private RectTransform _parentRectTransform;
 
+    private bool _canBeDragged = true;
     private bool _isDragged;
     private Vector3 _lastPosition;
     private int _lastSiblingIndex;
@@ -23,9 +25,16 @@ public class TileMovement : MonoBehaviour
         // Game manager
         _gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
         
-        // Event trigger and shadow
+        // Tile components
+        _image = GetComponent<Image>();
         _eventTrigger = GetComponent<EventTrigger>();
         _shadow = GetComponent<Shadow>();
+
+        // Disable drag for empty tiles
+        if (_image.sprite == null)
+        {
+            _canBeDragged = false;
+        }
         
         // Tiles container
         _tilesCreator = GetComponentInParent<TilesManager>();
@@ -58,6 +67,8 @@ public class TileMovement : MonoBehaviour
     
     public void OnStartDrag(BaseEventData eventData)
     {
+        if (!_canBeDragged) return;
+        
         _isDragged = true;
         _shadow.enabled = true;
         
@@ -68,6 +79,8 @@ public class TileMovement : MonoBehaviour
     
     public void OnDrag(BaseEventData eventData)
     {
+        if (!_canBeDragged) return;
+        
         var e = (PointerEventData) eventData;
 
         // Move the tile onto the mouse and set it as last child (prevent from being draw behind other tiles)
@@ -78,6 +91,8 @@ public class TileMovement : MonoBehaviour
     
     public void OnEndDrag(BaseEventData eventData)
     {
+        if (!_canBeDragged) return;
+        
         _isDragged = false;
         _shadow.enabled = false;
         
@@ -111,12 +126,16 @@ public class TileMovement : MonoBehaviour
 
     public void OnPointerEnter(BaseEventData eventData)
     {
+        if (!_canBeDragged) return;
+        
         ScaleTile(new Vector3(1.05f, 1.05f));
         _shadow.enabled = true;
     }
     
     public void OnPointerExit(BaseEventData eventData)
     {
+        if (!_canBeDragged) return;
+        
         ResetScaleTile();
         _shadow.enabled = false;
     }
