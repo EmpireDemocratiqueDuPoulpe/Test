@@ -46,6 +46,7 @@ MonoBehaviour:
   gameDuration: 180
   defaultScore: 10000
   scoreLoosePerSeconds: 55
+  canHighScoreOnLose: 0
   endingDuration: 1
   scoreText: {fileID: 0}
   remainingTimeText: {fileID: 0}

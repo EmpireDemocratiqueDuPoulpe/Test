@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public int gameDuration = 180;
     public int defaultScore = 10_000;
     public int scoreLoosePerSeconds = 55;
+    public bool canHighScoreOnLose = false;
 
     [Header("Game loop")]
     public float endingDuration = 3f;
@@ -80,13 +81,17 @@ public class GameManager : MonoBehaviour
         if (_hasPlayerWon)
         {
             ShowWinScreen();
+            ShowNewHighScoreText(isAHighScore);
         }
         else
         {
             ShowLoseScreen();
-        }
 
-        ShowNewHighScoreText(isAHighScore);
+            if (canHighScoreOnLose)
+            {
+                ShowNewHighScoreText(isAHighScore);
+            }
+        }
     }
     
     private IEnumerator GamePlaying()
