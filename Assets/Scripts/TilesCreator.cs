@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public class GameManager : MonoBehaviour
+public class TilesCreator : MonoBehaviour
 {
     [Header("Tiles")]
     [SerializeField] private GameObject tilesContainer = null;
+    [SerializeField] private GameObject tilePrefab = null;
     [SerializeField] private int tilesPerRow = 3;
     [SerializeField] private int tilesMarginSize = 10;
     [SerializeField] private Texture2D[] textures = new Texture2D[0];
@@ -40,9 +39,13 @@ public class GameManager : MonoBehaviour
             }
         }
         
-        RemoveRandomTile();
+        RemoveRandomTile(true);
         ShuffleTiles();
     }
+    
+    /********************************************************************
+     * Initialization
+     ********************************************************************/
 
     private void GetRandomTexture()
     {
@@ -70,6 +73,10 @@ public class GameManager : MonoBehaviour
         _tileW = (float) spriteW / tilesPerRow;
         _tileH = (float) spriteH / tilesPerRow;
     }
+    
+    /********************************************************************
+     * Tile creation
+     ********************************************************************/
 
     private Image CreateTileGameObject(int x, int y)
     {
@@ -77,12 +84,15 @@ public class GameManager : MonoBehaviour
         var tileIndex = x * tilesPerRow + y;
         
         // Create the game object
-        //_tiles[tileIndex] = new GameObject("tile" + x + ":" + y);
-        _tiles.Add(new GameObject("tile" + x + ":" + y));
-        _tiles[tileIndex].transform.parent = tilesContainer.transform;
+        //_tiles.Add(new GameObject("tile" + x + ":" + y));
+        _tiles.Add(Instantiate(tilePrefab, tilesContainer.transform));
+        _tiles[tileIndex].name = "tile" + x + ":" + y;
+        //_tiles[tileIndex].transform.parent = tilesContainer.transform;
+        //_tiles[tileIndex].AddComponent<TileMovement>();
         
         // Set tile size and position
-        var tileRect = _tiles[tileIndex].AddComponent<RectTransform>();
+        //var tileRect = _tiles[tileIndex].AddComponent<RectTransform>();
+        var tileRect = _tiles[tileIndex].GetComponent<RectTransform>();
         var gW = _containerW / tilesPerRow;
         var gH = _containerH / tilesPerRow;
         
@@ -98,7 +108,7 @@ public class GameManager : MonoBehaviour
         // (-_containerH + gH + (2 * gH * y)) / 2
         
         // Add the Image component
-        return _tiles[tileIndex].AddComponent<Image>();
+        return _tiles[tileIndex].GetComponent<Image>();
     }
 
     private Sprite CreateSpriteFrom(int x, int y)
@@ -145,12 +155,68 @@ public class GameManager : MonoBehaviour
             _tiles[i] = secondTile;
         }
     }
+    
+    /********************************************************************
+     * Tile deletion
+     ********************************************************************/
 
-    private void RemoveRandomTile()
+    private void RemoveRandomTile(bool fakeDeletion = false)
     {
         var tile = GetRandomTile();
+
+        // Change the sprite to an invisible one. The tile still exist
+        if (fakeDeletion)
+        {
+            tile.GetComponent<Image>().sprite = null;
+            tile.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0f);
+        }
+        // Delete the tile entirely
+        else
+        {
+            Destroy(tile);
+            _tiles.Remove(tile);
+        }
+    }
+    
+    /********************************************************************
+     * Tile movement
+     ********************************************************************/
+
+    public bool MoveTileTo(GameObject tile, Vector3 newPos, Vector3 oldPos)
+    {
+        var hasMoved = false;
         
-        Destroy(tile);
-        _tiles.Remove(tile);
+        // Loop through each tile and search for position match
+        foreach (var t in _tiles)
+        {
+            // Skip if it's the moving tile
+            if (t.name.Equals(tile.name)) continue;
+            
+            // Get second tile position, size and origin
+            var tRect = t.GetComponent<RectTransform>().rect;
+            var tW = tRect.width;
+            var tH = tRect.height;
+            var tPos = t.transform.localPosition;
+            var tX = tPos.x;
+            var tY = tPos.y;
+            var tOriginX = tX - (tW / 2);
+            var tOriginY = tY + (tH / 2);
+
+            // Check if the moving tile is inside the second one
+            if (IsInsideOfTile(newPos.x, newPos.y, tOriginX, tOriginY, tW, tH))
+            {
+                tile.transform.localPosition = new Vector3(tX, tY);
+                t.transform.position = oldPos;
+                hasMoved = true;
+                break;
+            }
+        }
+
+        return hasMoved;
+    }
+
+    private bool IsInsideOfTile(float aX, float aY, float bX, float bY, float bW, float bH)
+    {
+        return ((aX > bX) && (aX < bX + bW)) && ((aY < bY) && (aY > bY - bH));
     }
 }
