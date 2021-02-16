@@ -55,7 +55,6 @@ public class TilesManager : MonoBehaviour
 
     private void InitTileArray()
     {
-        //_tiles = new GameObject[(int) Mathf.Pow(tilesPerRow, 2)];
         _tiles = new List<GameObject>();
     }
 
@@ -84,14 +83,15 @@ public class TilesManager : MonoBehaviour
         var tileIndex = x * tilesPerRow + y;
         
         // Create the game object
-        //_tiles.Add(new GameObject("tile" + x + ":" + y));
         _tiles.Add(Instantiate(tilePrefab, tilesContainer.transform));
         _tiles[tileIndex].name = "tile" + x + ":" + y;
-        //_tiles[tileIndex].transform.parent = tilesContainer.transform;
-        //_tiles[tileIndex].AddComponent<TileMovement>();
+
+        // Add the placement of the tile
+        var placementChecker = _tiles[tileIndex].GetComponent<TilePlacementChecker>();
+        placementChecker.SetCurrentTilePos(x, y);
+        placementChecker.SetCorrectTilePos(x, y);
         
         // Set tile size and position
-        //var tileRect = _tiles[tileIndex].AddComponent<RectTransform>();
         var tileRect = _tiles[tileIndex].GetComponent<RectTransform>();
         var gW = _containerW / tilesPerRow;
         var gH = _containerH / tilesPerRow;
@@ -119,9 +119,9 @@ public class TilesManager : MonoBehaviour
 
     private GameObject GetRandomTile()
     {
-        return _tiles[Random.Range(0, _tiles.Count)];
+        return _tiles[GetRandomTileIndex()];
     }
-    
+
     private int GetRandomTileIndex()
     {
         return Random.Range(0, _tiles.Count);
@@ -135,27 +135,41 @@ public class TilesManager : MonoBehaviour
             var tile = _tiles[i];
             var secondTileIndex = GetRandomTileIndex();
             var secondTile = _tiles[secondTileIndex];
-
+        
             if (tile == secondTile) continue;
             
-            // Invert name, position and index
-            //var oldName = tile.name;
-            //var newName = secondTile.name;
-
-            //tile.name = newName;
-            //secondTile.name = oldName;
-                
+            // Invert position
             var oldPos = tile.transform.position;
             var newPos = secondTile.transform.position;
-
+        
             tile.transform.position = newPos;
             secondTile.transform.position = oldPos;
-
-            _tiles[secondTileIndex] = tile;
-            _tiles[i] = secondTile;
+        
+            // Swap index
+            SwapTileIndex(i, tile, secondTileIndex, secondTile);
         }
     }
     
+    private void SwapTileIndex(GameObject firstTile, GameObject secondTile)
+    {
+        var firstTileChecker = firstTile.GetComponent<TilePlacementChecker>();
+        var secondTileChecker = secondTile.GetComponent<TilePlacementChecker>();
+        var firstTilePos = firstTileChecker.GetCurrentTilePos();
+            
+        firstTileChecker.SetCurrentTilePos(secondTileChecker.GetCurrentTilePos());
+        secondTileChecker.SetCurrentTilePos(firstTilePos);
+    }
+
+    private void SwapTileIndex(int firstIndex, GameObject firstTile, int secondIndex, GameObject secondTile)
+    {
+        SwapTileIndex(firstTile, secondTile);
+            
+        _tiles[secondIndex] = firstTile;
+        _tiles[firstIndex] = secondTile;
+    }
+    
+    
+
     /********************************************************************
      * Tile deletion
      ********************************************************************/
@@ -182,7 +196,7 @@ public class TilesManager : MonoBehaviour
      * Tile movement
      ********************************************************************/
 
-    public bool MoveTileTo(GameObject tile, Vector3 newPos, Vector3 oldPos)
+    public bool MoveTileTo(GameObject tile, Vector3 newPos, Vector3 oldPos, int oldSiblingIndex)
     {
         var hasMoved = false;
         
@@ -205,12 +219,19 @@ public class TilesManager : MonoBehaviour
             // Check if the moving tile is inside the second one
             if (IsInsideOfTile(newPos.x, newPos.y, tOriginX, tOriginY, tW, tH))
             {
+                // Swap position
                 tile.transform.localPosition = new Vector3(tX, tY);
                 t.transform.position = oldPos;
+
+                // Swap index
+                SwapTileIndex(tile, t);
+                
                 hasMoved = true;
                 break;
             }
         }
+        
+        Debug.Log("Finished ?: " + isPuzzleFinished());
 
         return hasMoved;
     }
@@ -218,5 +239,29 @@ public class TilesManager : MonoBehaviour
     private bool IsInsideOfTile(float aX, float aY, float bX, float bY, float bW, float bH)
     {
         return ((aX > bX) && (aX < bX + bW)) && ((aY < bY) && (aY > bY - bH));
+    }
+    
+    /********************************************************************
+     * Puzzle completion
+     ********************************************************************/
+
+    public bool isPuzzleFinished()
+    {
+        for (var i = 0; i < _tiles.Count; i++)
+        {
+            var tile = _tiles[i];
+            var placementChecker = tile.GetComponent<TilePlacementChecker>();
+            var tilePos = placementChecker.GetCurrentTilePos();
+            var tileEndingPos = placementChecker.GetCorrectTilePos();
+            
+            Debug.Log(tile.name + ": ("+tilePos.x+" != "+tileEndingPos.x+" || "+tilePos.y+" != "+tileEndingPos.y+") = "+
+                      ((bool) (tilePos.x != tileEndingPos.x || tilePos.y != tileEndingPos.y)));
+
+            if ((tilePos.x != tileEndingPos.x) || (tilePos.y != tileEndingPos.y))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

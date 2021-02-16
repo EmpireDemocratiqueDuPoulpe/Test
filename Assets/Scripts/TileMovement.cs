@@ -7,19 +7,23 @@ public class TileMovement : MonoBehaviour
     private RectTransform _rectTransform;
     private RectTransform _parentRectTransform;
     private Vector3 _lastPosition;
+    private int _lastSiblingIndex;
     
     private void Start()
     {
         _tilesCreator = GetComponentInParent<TilesManager>();
         _rectTransform = GetComponent<RectTransform>();
         _parentRectTransform = transform.parent.GetComponent<RectTransform>();
+        
         _lastPosition = transform.localPosition;
+        _lastSiblingIndex = transform.GetSiblingIndex();
     }
     
     public void OnStartDrag(BaseEventData eventData)
     {
         // Save the position before any movement
         _lastPosition = transform.position;
+        _lastSiblingIndex = transform.GetSiblingIndex();
     }
     
     public void OnDrag(BaseEventData eventData)
@@ -48,7 +52,7 @@ public class TileMovement : MonoBehaviour
         }
         
         // Check if the tile can be moved, else return it back to the old position
-        if (!_tilesCreator.MoveTileTo(gameObject, localPos, _lastPosition))
+        if (!_tilesCreator.MoveTileTo(gameObject, localPos, _lastPosition, _lastSiblingIndex))
         {
             transform.position = _lastPosition;
         }
